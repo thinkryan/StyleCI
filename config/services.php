@@ -40,8 +40,8 @@ return [
     ],
 
     'stripe' => [
-        'model'  => 'User',
-        'secret' => '',
+        'model'  => 'StyleCI\StyleCI\Models\User',
+        'secret' => env('STRIPE_SECRET'),
     ],
 
     'github' => [

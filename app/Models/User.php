@@ -15,6 +15,8 @@ namespace StyleCI\StyleCI\Models;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Cashier\Billable;
+use Laravel\Cashier\Contracts\Billable as BillableContract;
 use McCool\LaravelAutoPresenter\HasPresenter;
 use StyleCI\StyleCI\Presenters\UserPresenter;
 
@@ -24,9 +26,9 @@ use StyleCI\StyleCI\Presenters\UserPresenter;
  * @author Graham Campbell <graham@mineuk.com>
  * @author Joseph Cohen <joseph.cohen@dinkbit.com>
  */
-class User extends Model implements AuthenticatableContract, HasPresenter
+class User extends Model implements AuthenticatableContract, BillableContract, HasPresenter
 {
-    use Authenticatable;
+    use Authenticatable, Billable;
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -34,6 +36,20 @@ class User extends Model implements AuthenticatableContract, HasPresenter
      * @var bool
      */
     public $incrementing = false;
+
+    /**
+     * Indicates if a credit card is required upfront.
+     *
+     * @var bool
+     */
+    protected $cardUpFront = false;
+
+    /**
+     * Indicates the extra columns that are dates.
+     *
+     * @var string[]
+     */
+    protected $dates = ['trial_ends_at', 'subscription_ends_at'];
 
     /**
      * The attributes that are mass assignable.

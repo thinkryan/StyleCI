@@ -143,6 +143,7 @@ return [
         'Illuminate\Translation\TranslationServiceProvider',
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
+        'Laravel\Cashier\CashierServiceProvider',
         'Laravel\Socialite\SocialiteServiceProvider',
         'Fideloper\Proxy\TrustedProxyServiceProvider',
         'McCool\LaravelAutoPresenter\LaravelAutoPresenterServiceProvider',

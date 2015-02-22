@@ -51,7 +51,7 @@ class Hooks
      */
     public function enable(Repo $repo)
     {
-        $url = route('webhook_callback');
+        $url = route('github_callback');
         $args = explode('/', $repo->name);
         $hooks = $this->factory->make($repo)->repo()->hooks();
 

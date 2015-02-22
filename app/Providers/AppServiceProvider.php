@@ -14,6 +14,7 @@ namespace StyleCI\StyleCI\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use StyleCI\StyleCI\Http\Middleware\Authenticate;
+use StyleCI\StyleCI\Models\User;
 
 /**
  * This is the app service provider class.
@@ -22,6 +23,18 @@ use StyleCI\StyleCI\Http\Middleware\Authenticate;
  */
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Boot the service provider.
+     *
+     * @param \Illuminate\Bus\Dispatcher $dispatcher
+     *
+     * @return void
+     */
+    public function boot(Dispatcher $dispatcher)
+    {
+        User::setStripeKey($this->app->config->get('services.stripe.key'));
+    }
+
     /**
      * Register the service provider.
      *

@@ -36,8 +36,13 @@ class MainRoutes
         ]);
 
         $router->post('github-callback', [
-            'as'   => 'webhook_callback',
+            'as'   => 'github_callback',
             'uses' => 'GitHubController@handle',
+        ]);
+
+        $router->post('stripe-callback', [
+            'as'   => 'stripe_callback',
+            'uses' => 'StripeController@handle',
         ]);
     }
 }
