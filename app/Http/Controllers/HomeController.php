@@ -60,4 +60,14 @@ class HomeController extends AbstractController
     {
         return View::make('policies.terms');
     }
+
+    /**
+     * Handles the request to view the thank yous.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function handleThanks()
+    {
+        return View::make('thanks');
+    }
 }

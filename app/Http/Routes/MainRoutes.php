@@ -69,5 +69,10 @@ class MainRoutes
             'as'   => 'terms_of_service',
             'uses' => 'HomeController@handleTerms',
         ]);
+
+        $router->get('thanks', [
+            'as'   => 'saying_thanks',
+            'uses' => 'HomeController@handleThanks',
+        ]);
     }
 }
