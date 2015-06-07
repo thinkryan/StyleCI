@@ -29,7 +29,7 @@ class ApiRoutes
      */
     public function map(Registrar $router)
     {
-        $router->group(['prefix' => 'api'], function(Registrar $router) {
+        $router->group(['prefix' => 'api'], function (Registrar $router) {
             $router->get('account/repos', [
                 'as'   => 'account_repos_path',
                 'uses' => 'AccountController@handleListRepos',
