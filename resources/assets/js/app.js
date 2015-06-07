@@ -2,8 +2,6 @@ $(function() {
     // App setup
     window.StyleCI = {};
 
-    var fuse;
-
     // Global Ajax Setup
     $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
 
@@ -79,8 +77,7 @@ $(function() {
         host: window.location.host,
         base_url: window.location.protocol + '//' + window.location.host,
         url: document.URL,
-        user: $('meta[name="styleci:user"]').attr('content'),
-        repos: []
+        user: $('meta[name="styleci:user"]').attr('content')
     };
 
     StyleCI.Events = {};
@@ -311,126 +308,13 @@ $(function() {
         }
     };
 
-    StyleCI.Account = {
-        getRepos: function(url) {
-            var $tpl = $('#repos-template'),
-                $reposHolder = $('.repos'),
-                $loading = $('.loading');
-
-            $loading.show();
-            $reposHolder.hide();
-
-            var requestUrl = (typeof url !== 'undefined') ? url : StyleCI.globals.base_url + '/account/repos';
-
-            return $.get(requestUrl)
-                .done(function(response) {
-                    var sortedData = _.sortBy(response.data, function(repo, key) {
-                        repo.id = key;
-                        return repo.name.toLowerCase();
-                    });
-                    handleReposList(sortedData);
-                })
-                .fail(function(response) {
-                    (new StyleCI.Notifier()).notify(response.responseJSON.errors[0].title);
-                })
-                .always(function() {
-                    $loading.hide();
-                });
-        },
-        syncRepos: function(btn) {
-            var self = this,
-                $reposHolder = $('.repos'),
-                $loading = $('.loading');
-
-            btn.button('loading');
-
-            $loading.show();
-            $reposHolder.hide();
-
-            return $.post(btn.attr('href'))
-                .done(function(response) {
-                    $.when(self.getRepos()).then(function() {
-                        btn.button('reset').blur();
-                    });
-                })
-                .fail(function(response) {
-                    (new StyleCI.Notifier()).notify(response.responseJSON.errors[0].title);
-                });
-        },
-        enableOrDisableRepo: function(btn) {
-            var repoId = btn.data('id'),
-                $enabledTpl = $('#enabled-repo-template'),
-                $disabledTpl = $('#disabled-repo-template'),
-                $controlsHolder = btn.closest('.repo-controls');
-
-            btn.button('loading');
-
-            $.post(btn.attr('href'))
-                .done(function(response) {
-                    if (response.enabled) {
-                        var enabledTpl = _.template($enabledTpl.html());
-                        $controlsHolder.html(enabledTpl({repo: {id: repoId}}));
-                    } else {
-                        var disabledTpl = _.template($disabledTpl.html());
-                        $controlsHolder.html(disabledTpl({repo: {id: repoId}}));
-                    }
-                })
-                .fail(function(response) {
-                    (new StyleCI.Notifier()).notify(response.responseJSON.errors[0].title);
-                })
-                .always(function() {
-                    btn.button('reset');
-                });
-        }
-    };
-
-    $(document.body).on('click', '.js-enable-repo, .js-disable-repo', function(e) {
-        e.preventDefault();
-        var $a = $(this);
-
-        if ($a.hasClass('js-confirm-action')) {
-            if (confirm('Are you sure you want to disable this repository, all analysed data will be lost?')) {
-                StyleCI.Account.enableOrDisableRepo($a);
-            }
-        } else {
-            StyleCI.Account.enableOrDisableRepo($a);
-        }
-        return false;
-    });
-
-    $('.js-sync-repos').on('click', function(e) {
-        e.preventDefault();
-        StyleCI.Account.syncRepos($(this));
-        return false;
-    });
-
     $('.js-analyse-repo').on('click', function(e) {
         e.preventDefault();
         StyleCI.Repo.AnalyseCommit($(this));
         return false;
     });
 
-    $('input[name=query]').on('keyup', function () {
-        var $this = $(this);
-
-        var r = fuse.search($this.val());
-
-        if ($.trim(r) === '') {
-            StyleCI.Account.getRepos();
-        } else {
-            handleReposList(r);
-        }
+    new Vue({
+        el: '#app'
     });
-
-    function handleReposList(data) {
-        var $tpl = $('#repos-template'),
-            $reposHolder = $('.repos');
-
-        var reposTpl = _.template($tpl.html());
-
-        $reposHolder.html(reposTpl({repos: data}));
-        $reposHolder.show();
-
-        fuse = new Fuse(data, { keys: ["name", "id"] });
-    }
 });
